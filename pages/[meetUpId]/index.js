@@ -25,27 +25,27 @@ function MeetupDetails(props){
     
 }
 
-export async function getStaticPaths(){
+// export async function getStaticPaths(){
 
-    const client = await MongoClient.connect('mongodb+srv://sharmasakshi3114:sakshi3114@cluster0.7jrlz.mongodb.net/meetups');
+//     const client = await MongoClient.connect('mongodb+srv://sharmasakshi3114:sakshi3114@cluster0.7jrlz.mongodb.net/meetups');
 
-    const db =  client.db();
+//     const db =  client.db();
 
-    const meetupsCollection = db.collection('meetups');
+//     const meetupsCollection = db.collection('meetups');
 
-    const meetups = await meetupsCollection.find({},{_id : 1}).toArray();
+//     const meetups = await meetupsCollection.find({},{_id : 1}).toArray();
 
-    client.close();
+//     client.close();
 
-    return {
-        fallback : blocking,
-        paths: meetups.map((meetup) => ({
-            params : {meetUpId : meetup._id.toString()},
-    })),
-    }
+//     return {
+//         fallback : blocking,
+//         paths: meetups.map((meetup) => ({
+//             params : {meetUpId : meetup._id.toString()},
+//     })),
+//     }
 
     
-}
+// }
 
 // export async function getStaticProps(context){
 
@@ -88,6 +88,12 @@ export async function getServerSideProps(context) {
 
     client.close();
 
+    if (!selectedMeetup) {
+        return {
+            notFound: true, // Returns a 404 page if meetup is not found
+        };
+    }
+
     return {
         props: {
             meetupData: {
@@ -100,5 +106,6 @@ export async function getServerSideProps(context) {
         }
     };
 }
+
 
 export default MeetupDetails;

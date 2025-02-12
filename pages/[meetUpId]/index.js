@@ -47,33 +47,58 @@ export async function getStaticPaths(){
     
 }
 
-export async function getStaticProps(context){
+// export async function getStaticProps(context){
 
+//     const meetUpId = context.params.meetUpId;
+//     const client = await MongoClient.connect('mongodb+srv://sharmasakshi3114:sakshi3114@cluster0.7jrlz.mongodb.net/meetups');
+
+//     const db =  client.db();
+
+//     const meetupsCollection = db.collection('meetups');
+
+//     const selectedMeetup = await meetupsCollection.findOne({ _id: new ObjectId(meetUpId) });
+
+//     client.close();
+
+//     //fetch data for single meetup
+
+//     return {
+//         props:{
+//             meetupData:{
+//                 id:selectedMeetup._id.toString(),
+//                 title:selectedMeetup.title,
+//                 image:selectedMeetup.image,
+//                 address:selectedMeetup.address,
+//                 description:selectedMeetup.description
+//             }
+//         }
+
+//     }
+// }
+
+
+export async function getServerSideProps(context) {
     const meetUpId = context.params.meetUpId;
     const client = await MongoClient.connect('mongodb+srv://sharmasakshi3114:sakshi3114@cluster0.7jrlz.mongodb.net/meetups');
-
-    const db =  client.db();
-
+    
+    const db = client.db();
     const meetupsCollection = db.collection('meetups');
 
     const selectedMeetup = await meetupsCollection.findOne({ _id: new ObjectId(meetUpId) });
 
     client.close();
 
-    //fetch data for single meetup
-
     return {
-        props:{
-            meetupData:{
-                id:selectedMeetup._id.toString(),
-                title:selectedMeetup.title,
-                image:selectedMeetup.image,
-                address:selectedMeetup.address,
-                description:selectedMeetup.description
+        props: {
+            meetupData: {
+                id: selectedMeetup._id.toString(),
+                title: selectedMeetup.title,
+                image: selectedMeetup.image,
+                address: selectedMeetup.address,
+                description: selectedMeetup.description,
             }
         }
-
-    }
+    };
 }
 
 export default MeetupDetails;
